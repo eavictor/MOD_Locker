@@ -24,7 +24,9 @@ HOST = '192.168.88.1'
 PORT = 22
 USERNAME = 'admin'
 PASSWORD = ''
-# 每次判斷間隔時間(秒)，裝置多時請將時間拉長
+# MOD開啟後每次判斷間隔時間(秒)
+SLEEP_WHILE_ENABLED = 3600
+# MOD關閉後每次判斷間隔時間(秒)，裝置多時請將時間拉長
 SLEEP = 60
 # RouterOS網路介面的名稱(多個)
 ROS_INTERFACES = [
@@ -116,13 +118,16 @@ if __name__ == '__main__':
     for ethernet in ROS_INTERFACES:
         commands.append('/interface disable ' + ethernet)
     _ssh_router(commands)
-
+    # set sleep time = SLEEP
+    sleep_time = SLEEP
     # start checking devices online status
     while True:
         if _check_offline_devices() and _check_online_devices():
             _mod_switch(True)
+            sleep_time = SLEEP_WHILE_ENABLED
             IS_MOD_ENABLED = True
         else:
             _mod_switch(False)
+            sleep_time = SLEEP
             IS_MOD_ENABLED = False
-        time.sleep(SLEEP)
+        time.sleep(sleep_time)
