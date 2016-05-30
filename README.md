@@ -1,4 +1,11 @@
 # 中華電信MOD自動鎖(RouterOS)
+
+## 說明：
+1.程式啟動時會先將RouterOS指定介面關閉
+
+2.開始依照設定執行判斷
+
+3.可相容其他有SSH功能的路由器，請自行修改_mod_switch(turn_on)內的SSH指令
 ## 執行條件
 Python=3.5.1
 
@@ -15,7 +22,7 @@ PORT = SSH連線PORT(預設22)
 USERNAME = '登入名稱'
 PASSWORD = '登入密碼'
 ONLINE_PING_RETRY = 必須連線的裝置在離線後重新嘗試ping次數(防止誤判)
-SLEEP_TIME = 每次判斷間隔時間(秒)，裝置多時請將時間拉長
+SLEEP_TIME = 每次判斷間隔時間(秒)
 ROS_INTERFACES = ['ether1', 'pppoe-out-x', 'sstp-client-x']
 OFFLINE_DEVICES = ['IP', '或', '網址']
 ONLINE_DEVICES = ['IP', '或', '網址']

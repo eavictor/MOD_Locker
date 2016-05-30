@@ -2,10 +2,11 @@
 # -*- coding: UTF-8 -*-
 
 """
-MOD自動上鎖
+中華電信MOD自動鎖(RouterOS)
 說明：
 1. 程式啟動時會先將RouterOS指定介面關閉
 2. 開始依照設定執行判斷
+3. 可相容其他有SSH功能的路由器，請自行修改_mod_switch(turn_on)內的SSH指令
 
 運作邏輯：
 判斷必須離線的裝置是否'全部'離線、必須連線的裝置是'全部'在線上
@@ -26,7 +27,7 @@ USERNAME = 'admin'
 PASSWORD = ''
 # 必須連線的裝置在離線後重新嘗試ping次數(防止誤判)
 ONLINE_PING_RETRY = 5
-# 每次判斷間隔時間(秒)，裝置多時請將時間拉長
+# 每次判斷間隔時間(秒)
 SLEEP_TIME = 60
 # RouterOS網路介面的名稱(多個)
 ROS_INTERFACES = [
