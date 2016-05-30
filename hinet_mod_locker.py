@@ -24,10 +24,10 @@ HOST = '192.168.88.1'
 PORT = 22
 USERNAME = 'admin'
 PASSWORD = ''
-# MOD開啟後每次判斷間隔時間(秒)
-SLEEP_WHILE_ENABLED = 3600
-# MOD關閉後每次判斷間隔時間(秒)，裝置多時請將時間拉長
-SLEEP = 60
+# 必須連線的裝置在離線後重新嘗試ping次數(防止誤判)
+ONLINE_PING_RETRY = 5
+# 每次判斷間隔時間(秒)，裝置多時請將時間拉長
+SLEEP_TIME = 60
 # RouterOS網路介面的名稱(多個)
 ROS_INTERFACES = [
     'ether101',
@@ -76,25 +76,28 @@ def _check_online_devices():
     ping_command = 'ping -n 1 ' if platform.system().lower() == 'windows' else 'ping -c 1 '
     # check if ONLINE_DEVICES are all online
     for device in ONLINE_DEVICES:
+        counter = 0
         command = ping_command + device + ' | find "TTL="'
-        print(datetime.now(), end='')
-        print(' ping command: ' + command)
-        response = os.system(command=command)
-        print(datetime.now(), end='')
-        print(' response code: ' + str(response))
-        if response != 0:
-            return False  # return False if one of the device is offline
+        while counter < ONLINE_PING_RETRY:
+            response = os.system(command=command)
+            if response == 0:
+                break  # break while loop if current device is online
+            elif response != 0 and counter < ONLINE_PING_RETRY:
+                counter += 1
+                continue  # continue ping if device is unreachable and not exceed retry limit
+            elif response != 0 and counter == ONLINE_PING_RETRY:
+                return False  # return False if device is is unreachable and exceed retry limit
     return True
 
 
-def _mod_switch(online):
-    if online and not IS_MOD_ENABLED:
+def _mod_switch(turn_on):
+    if turn_on and not IS_MOD_ENABLED:
         ssh_commands = []
         for interface in ROS_INTERFACES:
             ssh_commands.append('/interface enable ' + interface)
         _ssh_router(ssh_commands)
 
-    elif not online and IS_MOD_ENABLED:
+    elif not turn_on and IS_MOD_ENABLED:
         ssh_commands = []
         for interface in ROS_INTERFACES:
             ssh_commands.append('/interface disable ' + interface)
@@ -118,16 +121,12 @@ if __name__ == '__main__':
     for ethernet in ROS_INTERFACES:
         commands.append('/interface disable ' + ethernet)
     _ssh_router(commands)
-    # set sleep time = SLEEP
-    sleep_time = SLEEP
     # start checking devices online status
     while True:
         if _check_offline_devices() and _check_online_devices():
             _mod_switch(True)
-            sleep_time = SLEEP_WHILE_ENABLED
             IS_MOD_ENABLED = True
         else:
             _mod_switch(False)
-            sleep_time = SLEEP
             IS_MOD_ENABLED = False
-        time.sleep(sleep_time)
+        time.sleep(SLEEP_TIME)
