@@ -3,13 +3,13 @@
 ## 說明：
 1.程式啟動時會先將RouterOS指定介面關閉
 
-2.開始依照設定執行判斷
+2.開始依照設定執行判斷，符合條件後重新開啟RouterOS指定介面
 
 3.可相容其他有SSH功能的路由器，請自行修改_mod_switch(turn_on)內的SSH指令
 ## 執行條件
-Python=3.5.1
+Python==3.5.1
 
-paramiko=2.0.0
+paramiko==2.0.0
 ## 安裝方式(Windows)
 1.安裝Python 3.5.1，請記得勾選 Add Python 3.5 to PATH
 
@@ -28,9 +28,9 @@ OFFLINE_DEVICES = ['IP', '或', '網址']
 ONLINE_DEVICES = ['IP', '或', '網址']
 ```
 
-4.把hinet_mod_locker.py丟到開機執行資料夾內
+4.把hinet_mod_locker.py丟到開機執行資料夾內(按 Win+R 之後輸入 shell:startup)
 
-5.重新開機
+5.重新開機或雙擊hinet_mod_locker.py開始執行
 ## 疑難排解
 執行後一片黑
 ```
