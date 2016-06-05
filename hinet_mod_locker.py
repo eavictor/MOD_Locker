@@ -81,7 +81,7 @@ def _check_online_devices():
         command = ping_command + device + ' | find "TTL="'
         print(datetime.now(), end='')
         print(' ping command: ' + command)
-        while counter < ONLINE_PING_RETRY:
+        while counter <= ONLINE_PING_RETRY:
             response = os.system(command=command)
             print(datetime.now(), end='')
             print(' response code: ' + str(response) + ' retry: ' + str(counter))
