@@ -7,9 +7,9 @@
 
 3.可相容其他有SSH功能的路由器，請自行修改_mod_switch(turn_on)內的SSH指令
 ## 執行條件
-Python==3.5.1
+Python>=3.5.1
 
-paramiko==2.0.0
+paramiko>=2.0.0
 ## 安裝方式(Windows)
 1.安裝Python 3.5.1，請記得勾選 Add Python 3.5 to PATH
 

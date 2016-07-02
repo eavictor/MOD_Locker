@@ -100,12 +100,14 @@ def _mod_switch(turn_on):
         ssh_commands = []
         for interface in ROS_INTERFACES:
             ssh_commands.append('/interface enable ' + interface)
+        ssh_commands.append('/quit')
         _ssh_router(ssh_commands)
 
     elif not turn_on and IS_MOD_ENABLED:
         ssh_commands = []
         for interface in ROS_INTERFACES:
             ssh_commands.append('/interface disable ' + interface)
+        ssh_commands.append('/quit')
         _ssh_router(ssh_commands)
 
 
@@ -125,6 +127,7 @@ if __name__ == '__main__':
     commands = []
     for ethernet in ROS_INTERFACES:
         commands.append('/interface disable ' + ethernet)
+    commands.append('/quit')
     _ssh_router(commands)
     # start checking devices online status
     while True:
